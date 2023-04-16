@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
-const db = "mongodb+srv://goutham:goutham@cluster0.prnzx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-mongoose.connect(db,{
-    useNewUrlParser:true,
-    useUnifiedTopology:true,
-   
+
+mongoose.set('strictQuery', true)
+
+mongoose.connect("mongodb+srv://ganendhar:Gani7708@cluster0.y0p81dn.mongodb.net/?retryWrites=true&w=majority",{
+    useNewUrlParser:true  
 }).then(()=>{
     console.log("Connected to the databse")
 }).catch((err)=>{
-    console.log("Something went wrong while connecting to the databse");
+    console.log("Something went wrong while connecting to the databse",err.message);
     console.log(err)
 });
 

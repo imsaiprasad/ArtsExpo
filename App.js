@@ -8,9 +8,7 @@ const flash = require("connect-flash"),
     passport = require("passport"),
     localstrategy = require("passport-local"),
     methodOverride = require("method-override");
-
 app.use("/",require("./routers/routers"));
-//const store = require("./middleware/multer");
 require("./db/conn");
 const uploads = require("./middleware/multer");
 const Posts = require("./models/post");
@@ -31,37 +29,12 @@ app.use(express.static("views"));
 app.set("view engine","ejs");
 
 app.set("views",templatesPath);
-// hbs.registerPartials(partialsPath);
-//app.use(express.static("public"));
-
 express.urlencoded({extended:false})
-
-// app.use(methodOverride("_method"));
-// app.use(flash());
-
-// app.use(require("express-session")({
-//     secret: "persona 5 foh life",
-//     resave: false,
-//     saveUninitialized: false,
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(new localstrategy(user.authenticate()));
-// passport.serializeUser(user.serializeUser());
-// passport.deserializeUser(user.deserializeUser());
-// app.use(function(req, res, next) {
-//     res.locals.currentuser = req.user;
-//     res.locals.error = req.flash("error");
-//     res.locals.success = req.flash("success");
-//     next();
-// });
-// rendering static files with hbs
 app.get("/",(req,res)=>{
     res.render("index");
 })
 app.get("/signup",(req,res)=>{
     res.render("signup");
-   // console.log(res.username)
 })
 app.get("/login",(req,res)=>{
     res.render("login");
@@ -87,42 +60,19 @@ app.get("/contactus",(req,res)=>{
 app.post("/signup",async(req,res)=>{
    // console.log(res.username);
     try {
-        
-
-        // console.log("User name is : "+req.body.username);
-        // console.log("User email is : "+req.body.useremail);
-
-        // console.log("User password is : "+req.body.userpassword);
-
-        // console.log("User cpassword is : "+req.body.usercpassword);
-        // console.log("User address is  : "+req.body.useraddress);
-
         const {username,useremail,userpassword,usercpassword} = req.body;
-
-        
-        //console.log(`${username} and  ${useremail}`);
-
-        // check for the user if he registered or not
-        
         const isexisted = await Users.findOne({useremail});
         if(isexisted){
             res.send("Oops! This user already existed, Please try with different email");
         }
         else{
             if(usercpassword!=userpassword){
-                res.send("Your passwords are not matching");
-                
+                res.send("Your passwords are not matching"); 
             }else{
-
             const user_details = new Users({username,useremail,userpassword,usercpassword});
             await user_details.save();
-                //sending the registrastion email
-            
-
-            //res.status(201).send("User registerd successfully");
             res.render("login");
             }
-            //alert("Registerd successfully");
         }
 
     } catch (error) {
@@ -133,35 +83,24 @@ app.post("/signup",async(req,res)=>{
 
 app.post("/login",async(req,res)=>{
     const{useremail,userpassword} = req.body;
-
     try {
-        //check if user existed
         const existedUser = await Users.findOne({useremail});
         console.log(existedUser.useremail);
         console.log(existedUser.userpassword);
 
         if(existedUser.useremail === useremail && existedUser.userpassword===userpassword)
         {
-            //res.send("You are now logged in");
             res.render("main",{
                 UserName : existedUser.username,
                 UserEmail : existedUser.useremail,
                 UserAddress : existedUser.useraddress
-
-
-
             });
-           
-            
-
         }
         else{
             res.send("Oops! youre credintials were wrong");
         }
     } catch (error) {
-        res.send("Oops! Something went wrong while sing in");
-        
-        
+        res.send("Oops! Something went wrong while sing in");   
     }
 })
 app.listen(port,()=>{
